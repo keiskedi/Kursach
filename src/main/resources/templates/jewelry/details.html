@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Деталі прикраси</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+
+        .jewelry-details {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .jewelry-details img {
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+
+        .comments {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #aaa;
+        }
+
+        .comment {
+            background-color: #f3f3f3;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+        }
+
+        .comment-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 th:text="${jewelry.name}">Назва прикраси</h1>
+<div>
+    <h3>📷 Фото:</h3>
+    <div th:each="img : ${jewelry.images}">
+        <img th:src="@{${img.url}}" alt="Фото" style="max-width: 200px; margin: 5px;"/>
+    </div>
+</div>
+<div style="margin-bottom: 20px;">
+    <a th:href="@{/}" style="text-decoration: none; font-weight: bold; font-size: 16px;">⬅️ На головну</a>
+</div>
+<div class="jewelry-details">
+    <img th:src="${jewelry.imageUrl}" alt="Фото прикраси"/>
+    <p><strong>Опис:</strong> <span th:text="${jewelry.description}">Опис</span></p>
+    <p><strong>Ціна:</strong> <span th:text="${jewelry.price} + ' грн'">1000 грн</span></p>
+</div>
+
+<div class="comments">
+    <h2>💬 Коментарі:</h2>
+
+    <div th:if="${comments != null and !comments.isEmpty()}">
+        <div th:each="comment : ${comments}" class="comment">
+            <p th:text="${comment.text}">Текст коментаря</p>
+            <small th:text="'Автор: ' + ${comment.authorName}">Автор</small>
+        </div>
+    </div>
+    <p th:if="${comments == null or comments.isEmpty()}">Коментарів поки немає.</p>
+
+    <!-- Форма для авторизованих користувачів -->
+    <div class="comment-form" th:if="${#authentication?.name != 'anonymousUser'}">
+        <form th:action="@{'/jewelry/' + ${jewelry.id} + '/comment'}" method="post" th:object="${comment}">
+            <textarea th:field="*{text}" placeholder="Залиште коментар..." rows="3" cols="40" required></textarea><br/>
+            <button type="submit">Додати коментар</button>
+        </form>
+    </div>
+</div>
+<!-- Тільки для залогінених -->
+<div th:if="${#authentication?.name != 'anonymousUser'}">
+    <form th:action="@{'/cart/add/' + ${jewelry.id}}" method="post">
+        <button type="submit">🛒 Додати в кошик</button>
+        <!-- 🔙 Кнопка повернення на головну -->
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sisters Stones</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+        }
+
+        .header {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            text-align: right;
+        }
+
+        .header a, .header button {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+
+        .jewelry-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 🔐 Панель користувача -->
+<div class="header">
+    <div th:if="${#authentication?.name == 'anonymousUser'}">
+        <a th:href="@{/register}">📝 Реєстрація</a> |
+        <a th:href="@{/login}">🔐 Увійти</a>
+    </div>
+    <div th:if="${#authentication?.name != 'anonymousUser'}">
+        👤 <span th:text="${#authentication.name}">User</span> |
+        <a th:href="@{/cart}">🛒 Кошик</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <button type="submit">🚪 Вийти</button>
+        </form>
+    </div>
+</div>
+
+<h1>💎 Sisters Stones — Прикраси</h1>
+
+<!-- 🔁 Вивід прикрас -->
+<div th:each="jewelry : ${jewelryList}" class="jewelry-card">
+    <h2 th:text="${jewelry.name}">Назва</h2>
+    <p th:text="${jewelry.description}">Опис</p>
+    <p><strong>Ціна:</strong> <span th:text="${jewelry.price} + ' грн'">Ціна</span></p>
+    <a th:href="@{'/jewelry/' + ${jewelry.id}}">🔍 Детальніше</a>
+</div>
+
+</body>
+</html>

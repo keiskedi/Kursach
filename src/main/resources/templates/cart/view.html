@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мій кошик</title>
+</head>
+<body>
+<h1>🛒 Ваш кошик</h1>
+
+<div th:if="${cartItems.isEmpty()}">
+    <p>Кошик порожній.</p>
+</div>
+
+<div th:each="item : ${cartItems}">
+    <p><strong th:text="${item.jewelry.name}">Назва</strong> — <span th:text="${item.jewelry.price} + ' грн'">1000 грн</span></p>
+    <form th:action="@{'/cart/remove/' + ${item.jewelry.id}}" method="post">
+        <button type="submit">❌ Видалити</button>
+    </form>
+    <hr/>
+</div>
+
+<a href="/">⬅ Повернутись до магазину</a>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вхід до системи</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 40px;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h2 class="center">🔐 Вхід до облікового запису</h2>
+
+<form th:action="@{/login}" method="post">
+    <label for="username">Ім’я користувача або логін:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Пароль:</label>
+    <input type="password" id="password" name="password" required>
+
+    <div class="center">
+        <button type="submit">Увійти</button>
+    </div>
+</form>
+
+<div class="center" style="margin-top: 20px;">
+    <a th:href=\"@{/}\">⬅ Повернутись на головну</a>
+</div>
+
+</body>
+</html>
