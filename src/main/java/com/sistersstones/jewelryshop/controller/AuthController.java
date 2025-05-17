@@ -33,14 +33,15 @@ public class AuthController {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setRole("ROLE_USER"); // ✅ ось ключ
         userRepository.save(user);
+
 
         return "redirect:/login"; // Spring покаже свою форму
     }
 
-    // ❌ Цей метод видалити або закоментувати:
-    // @GetMapping("/login")
-    // public String loginPage() {
-    //     return "login";
-    // }
+     @GetMapping("/login")
+     public String loginPage() {
+         return "login";
+     }
 }
