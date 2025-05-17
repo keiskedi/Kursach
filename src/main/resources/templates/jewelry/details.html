@@ -41,21 +41,20 @@
 <body>
 
 <h1 th:text="${jewelry.name}">Назва прикраси</h1>
-<div>
-    <h3>📷 Фото:</h3>
-    <div th:each="img : ${jewelry.images}">
-        <img th:src="@{${img.url}}" alt="Фото" style="max-width: 200px; margin: 5px;"/>
-    </div>
-</div>
+
 <div style="margin-bottom: 20px;">
     <a th:href="@{/}" style="text-decoration: none; font-weight: bold; font-size: 16px;">⬅️ На головну</a>
 </div>
 <div class="jewelry-details">
-    <img th:src="${jewelry.imageUrl}" alt="Фото прикраси"/>
+    <img th:src="@{${jewelry.imageUrl}}" alt="Фото прикраси"/>
     <p><strong>Опис:</strong> <span th:text="${jewelry.description}">Опис</span></p>
     <p><strong>Ціна:</strong> <span th:text="${jewelry.price} + ' грн'">1000 грн</span></p>
 </div>
-
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+    <div th:each="img : ${jewelry.images}">
+        <img th:src="@{${img.url}}" alt="Фото" style="width: 200px; height: auto; border-radius: 6px;"/>
+    </div>
+</div>
 <div class="comments">
     <h2>💬 Коментарі:</h2>
 
@@ -75,11 +74,16 @@
         </form>
     </div>
 </div>
-<!-- Тільки для залогінених -->
+
+<!-- Кошик -->
 <div th:if="${#authentication?.name != 'anonymousUser'}">
     <form th:action="@{'/cart/add/' + ${jewelry.id}}" method="post">
         <button type="submit">🛒 Додати в кошик</button>
-        <!-- 🔙 Кнопка повернення на головну -->
+    </form>
+</div>
+<div th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+    <form th:action="@{'/admin/delete-jewelry/' + ${jewelry.id}}" method="get" style="margin-top: 20px;">
+        <button type="submit" onclick="return confirm('Ви впевнені, що хочете видалити цю прикрасу?')">🗑 Видалити прикрасу</button>
     </form>
 </div>
 </body>

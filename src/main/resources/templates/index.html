@@ -2,59 +2,80 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sisters Stones</title>
+    <title>Головна сторінка | Sisters Stones</title>
     <style>
         body {
             font-family: sans-serif;
             margin: 20px;
-        }
-
-        .header {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            text-align: right;
-        }
-
-        .header a, .header button {
-            margin-left: 5px;
-            font-size: 14px;
+            background-color: #fdfdfd;
         }
 
         .jewelry-card {
             border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .jewelry-card img {
+            max-width: 250px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .jewelry-card h2 {
+            margin-top: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .top-bar .auth-links {
+            font-size: 14px;
+        }
+
+        .top-bar a {
+            margin-left: 10px;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-<!-- 🔐 Панель користувача -->
-<div class="header">
-    <div th:if="${#authentication?.name == 'anonymousUser'}">
-        <a th:href="@{/register}">📝 Реєстрація</a> |
-        <a th:href="@{/login}">🔐 Увійти</a> |
-    </div>
-    
-    <div th:if="${#authentication?.name != 'anonymousUser'}">
-        👤 <span th:text="${#authentication.name}">User</span> |
-        <a th:href="@{/cart}">🛒 Кошик</a>
-        <form th:action="@{/logout}" method="post" style="display:inline;">
-            <button type="submit">🚪 Вийти</button>
-        </form>
+<div class="top-bar">
+    <div class="logo">💎 <strong>Sisters Stones — Прикраси</strong></div>
+    <div class="auth-links">
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            👤 <span th:text="${#authentication.name}">username</span> |
+            <a th:href="@{/cart}">🛒 Кошик</a> |
+            <a th:href="@{/logout}">Вийти</a>
+            <a th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:href="@{/admin/add-jewelry}">Додати прикрасу</a>
+        </span>
+        <span th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a th:href="@{/login}">Увійти</a> |
+            <a th:href="@{/register}">Реєстрація</a>
+        </span>
     </div>
 </div>
 
-<h1>💎 Sisters Stones — Прикраси</h1>
-
-<!-- 🔁 Вивід прикрас -->
 <div th:each="jewelry : ${jewelryList}" class="jewelry-card">
-    <h2 th:text="${jewelry.name}">Назва</h2>
-    <p th:text="${jewelry.description}">Опис</p>
-    <p><strong>Ціна:</strong> <span th:text="${jewelry.price} + ' грн'">Ціна</span></p>
+    <!-- 👇 головне фото -->
+    <img th:src="@{${jewelry.imageUrl}}" alt="Фото прикраси" />
+
+    <h2 th:text="${jewelry.name}">Назва прикраси</h2>
+
+    <p><strong>Ціна:</strong> <span th:text="${jewelry.price} + ' грн'">1000 грн</span></p>
+
     <a th:href="@{'/jewelry/' + ${jewelry.id}}">🔍 Детальніше</a>
 </div>
 

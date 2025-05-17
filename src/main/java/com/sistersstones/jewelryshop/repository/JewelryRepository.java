@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface JewelryRepository extends JpaRepository<Jewelry, Long> {
 
-    // Для сортування за ціною
+    // Сортування прикрас за зростанням ціни
     List<Jewelry> findAllByOrderByPriceAsc();
+
+    // Сортування прикрас за спаданням ціни
     List<Jewelry> findAllByOrderByPriceDesc();
 }
